@@ -27,6 +27,7 @@ A coleção `Books` contém documentos com a seguinte estrutura:
   "is_book_available": false,
   "tags": ["dystopia", "politics", "surveillance"]
 }
+```
 
 ## Consultas para a coleção `Books`
 
