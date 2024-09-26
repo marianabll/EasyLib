@@ -22,7 +22,7 @@ A coleção `Books` contém documentos com a seguinte estrutura:
   "book_genre": "Dystopian",
   "pages": { "$numberInt": "328" },
   "isbn": "978-8535932003",
-  "summary": "Uma crítica à totalitarismo através da história de Winston Smith.",
+  "summary": "Uma crítica ao totalitarismo através da história de Winston Smith.",
   "average_rating": { "$numberDouble": "4.8" },
   "is_book_available": false,
   "tags": ["dystopia", "politics", "surveillance"]
@@ -33,15 +33,15 @@ A coleção `Books` contém documentos com a seguinte estrutura:
 
 #### Verificar Disponibilidade de um Livro
 
-db.Books.findOne({ book_name: "1984" }, { is_book_available: 1 })
+```db.Books.findOne({ book_name: "1984" }, { is_book_available: 1 })```
 
 #### Listar Livros Disponíveis por Gênero
 
-db.Books.find({ book_genre: "Dystopian", is_book_available: true })
+```db.Books.find({ book_genre: "Dystopian", is_book_available: true })```
 
 #### Consultar Livros por Autor
 
-db.Books.find({ "author.name": "George Orwell" })
+```db.Books.find({ "author.name": "George Orwell" })```
 
 ## 2. Coleção `Users`
 
@@ -66,11 +66,11 @@ A coleção `Users` contém documentos com a seguinte estrutura:
 
 #### Verificar se um Usuário está Registrado na Biblioteca
 
-db.Users.findOne({ username: "joaosilva" })
+```db.Users.findOne({ username: "joaosilva" })```
 
 #### Consultar o Número de Livros que um Usuário Mantém em Mãos
 
-db.Users.findOne({ _id: ObjectId("66f37341f0b1344ec2bba9df") }, { number_of_books_issued: 1 })
+```db.Users.findOne({ _id: ObjectId("66f37341f0b1344ec2bba9df") }, { number_of_books_issued: 1 })```
 
 
 ## 3. Coleção `Transactions`
@@ -83,7 +83,7 @@ A coleção `Transactions` contém documentos com a seguinte estrutura:
   "user_id": { "$oid": "66f37341f0b1344ec2bba9df" },
   "user_name": "João Silva",
   "book_id": { "$oid": "66f37341f0b1344ec2bba9d5" },
-  "book_name": "Nexus",
+  "book_name": "1984",
   "transaction_type": "issued",  // pode ser "issued" ou "returned"
   "transaction_date": "2023-08-15"
 }
@@ -93,7 +93,7 @@ A coleção `Transactions` contém documentos com a seguinte estrutura:
 
 #### Obter Todos os Livros Emprestados para um Usuário
 
-db.Transactions.find({
+```db.Transactions.find({
     user_id: ObjectId("66f37341f0b1344ec2bba9df"),
     transaction_type: "issued"
-})
+})```
