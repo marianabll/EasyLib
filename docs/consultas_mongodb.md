@@ -93,7 +93,8 @@ A coleção `Transactions` contém documentos com a seguinte estrutura:
 
 #### Obter Todos os Livros Emprestados para um Usuário
 
-```db.Transactions.find({
+```
+db.Transactions.find({
     user_id: ObjectId("66f37341f0b1344ec2bba9df"),
     transaction_type: "issued"
 })```
