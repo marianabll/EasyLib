@@ -97,4 +97,5 @@ A coleção `Transactions` contém documentos com a seguinte estrutura:
 db.Transactions.find({
     user_id: ObjectId("66f37341f0b1344ec2bba9df"),
     transaction_type: "issued"
-})```
+})
+```
