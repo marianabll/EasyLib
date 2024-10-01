@@ -43,6 +43,25 @@ A coleção `Books` contém documentos com a seguinte estrutura:
 
 ```db.Books.find({ "author.name": "George Orwell" })```
 
+#### Verificar Disponibilidade de um Livro por Gênero usando Agregação
+```
+db.Books.aggregate([
+  {
+    $match: {
+      available_copies: { $gt: 0 }, // Filtra apenas livros disponíveis
+      genres: "Gênero Específico"    // Substitua por um gênero desejado
+    }
+  },
+  {
+    $project: {
+      title: 1,     // Inclui o título do livro
+      author: 1,    // Inclui o autor do livro
+      available_copies: 1 // Inclui a quantidade de cópias disponíveis
+    }
+  }
+])
+```
+
 ## 2. Coleção `Users`
 
 A coleção `Users` contém documentos com a seguinte estrutura:
