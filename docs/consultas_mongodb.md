@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Este documento contém exemplos de consultas MongoDB para as três coleções (`Books`, `Users` e `Transactions`) do projeto de gerenciamento de biblioteca. As consultas permitem verificar a disponibilidade de livros, listar livros por gênero ou autor, verificar a permissão de retirada para um determinado usuário e registrar novas retiradas/devoluções de livros.
+Este documento contém exemplos de consultas MongoDB para as duas coleções (`Books` e `Users`) do projeto de gerenciamento de biblioteca. As consultas permitem verificar a disponibilidade de livros, listar livros por gênero ou autor, verificar a permissão de retirada para um determinado usuário e registrar novas retiradas/devoluções de livros.
 
 ## 1. Coleção `Books`
 
@@ -24,24 +24,28 @@ A coleção `Books` contém documentos com a seguinte estrutura:
   "isbn": "978-8535932003",
   "summary": "Uma crítica ao totalitarismo através da história de Winston Smith.",
   "average_rating": { "$numberDouble": "4.8" },
+  "tags": ["dystopia", "politics", "surveillance"],
   "available": false,
-  "tags": ["dystopia", "politics", "surveillance"]
+  "borrowed_by": {
+    "user_id": "66f5bff7b7394dd698d8e1a7",
+    "borrowed_date: "2023-01-10"
+  }
 }
 ```
 
-### Consultas para a coleção `Books`
+### Exemplos de consultas para a coleção `Books`
 
 #### Verificar Disponibilidade de um Livro
 
 ```db.Books.findOne({ book_name: "1984" }, { is_book_available: 1 })```
 
-#### Listar Livros Disponíveis por Gênero
-
-```db.Books.find({ book_genre: "Dystopian", is_book_available: true })```
-
 #### Consultar Livros por Autor
 
 ```db.Books.find({ "author.name": "George Orwell" })```
+
+#### Listar Livros Disponíveis por Gênero
+
+```db.Books.find({ book_genre: "Dystopian", is_book_available: true })```
 
 #### Retornar Livros Disponíveis de um Determinado Gênero usando Agregação
 ```
@@ -77,11 +81,12 @@ A coleção `Users` contém documentos com a seguinte estrutura:
   "join_date": "2023-01-10",
   "is_active": true,
   "favorite_genres": ["Fiction", "Adventure"],
-  "number_of_books_issued": { "$numberInt": "1" }
+  "number_of_books_issued": { "$numberInt": "1" },
+  "borrowed_books": [{"book_id": "66f5b5b2b7394dd698d8e1a6"}]
 }
 ```
 
-### Consultas para a coleção `Users`
+### Exemplos de consultas para a coleção `Users`
 
 #### Verificar se um Usuário está Registrado na Biblioteca
 
@@ -91,30 +96,3 @@ A coleção `Users` contém documentos com a seguinte estrutura:
 
 ```db.Users.findOne({ _id: ObjectId("66f37341f0b1344ec2bba9df") }, { number_of_books_issued: 1 })```
 
-
-## 3. Coleção `Transactions`
-
-A coleção `Transactions` contém documentos com a seguinte estrutura:
-
-```json
-{
-  "_id": { "$oid": "66f5c071b7394dd698d8e1a8" },
-  "user_id": { "$oid": "66f37341f0b1344ec2bba9df" },
-  "user_name": "João Silva",
-  "book_id": { "$oid": "66f37341f0b1344ec2bba9d5" },
-  "book_name": "1984",
-  "transaction_type": "issued",  // pode ser "issued" ou "returned"
-  "transaction_date": "2023-08-15"
-}
-```
-
-### Consulta para a coleção `Transactions`
-
-#### Obter Todos os Livros Emprestados para um Usuário
-
-```
-db.Transactions.find({
-    user_id: ObjectId("66f37341f0b1344ec2bba9df"),
-    transaction_type: "issued"
-})
-```
