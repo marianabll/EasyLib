@@ -1,4 +1,4 @@
-from config import db, users_collection, books_collection
+from db_connection import db, users_collection, books_collection
 from bson.objectid import ObjectId
 from datetime import datetime
 
