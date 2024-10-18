@@ -26,10 +26,7 @@ A coleção `Books` contém documentos com a seguinte estrutura:
   "average_rating": { "$numberDouble": "4.8" },
   "tags": ["dystopia", "politics", "surveillance"],
   "available": false,
-  "borrowed_by": {
-    "user_id": "66f5bff7b7394dd698d8e1a7",
-    "borrowed_date: "2023-01-10"
-  }
+  "borrowed_by": "66f5bff7b7394dd698d8e1a7"
 }
 ```
 
@@ -37,7 +34,7 @@ A coleção `Books` contém documentos com a seguinte estrutura:
 
 #### Verificar Disponibilidade de um Livro
 
-```db.Books.findOne({ book_name: "1984" }, { is_book_available: 1 })```
+```db.Books.findOne({ book_name: "1984" }, { available: 1 })```
 
 #### Consultar Livros por Autor
 
@@ -45,7 +42,7 @@ A coleção `Books` contém documentos com a seguinte estrutura:
 
 #### Listar Livros Disponíveis por Gênero
 
-```db.Books.find({ book_genre: "Dystopian", is_book_available: true })```
+```db.Books.find({ book_genre: "Dystopian", available: true })```
 
 #### Retornar Livros Disponíveis de um Determinado Gênero usando Agregação
 ```
@@ -53,7 +50,7 @@ db.Books.aggregate([
   {
     $match: {
       available: true,            // Filtra apenas livros disponíveis
-      genres: "Gênero Específico" // Substitua por um gênero desejado
+      book_genre: "Gênero Específico" // Substitua por um gênero desejado
     }
   },
   {
@@ -82,7 +79,7 @@ A coleção `Users` contém documentos com a seguinte estrutura:
   "is_active": true,
   "favorite_genres": ["Fiction", "Adventure"],
   "number_of_books_issued": { "$numberInt": "1" },
-  "borrowed_books": [{"book_id": "66f5b5b2b7394dd698d8e1a6"}]
+  "borrowed_books": ["66f5b5b2b7394dd698d8e1a6"]
 }
 ```
 
