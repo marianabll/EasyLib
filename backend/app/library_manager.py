@@ -110,3 +110,73 @@ def get_user_transaction_history(user_id):
     if user and "transactions" in user:
         return user["transactions"]
     return []
+
+# Função para contar o total de transações por usuário usando agregação
+def get_transaction_count_per_user():
+    pipeline = [
+        {
+            "$unwind": "$transactions"
+        },
+        {
+            "$group": {
+                "_id": "$_id",
+                "username": {"$first": "$username"},
+                "transaction_count": {"$sum": 1}
+            }
+        }
+    ]
+    result = users_collection.aggregate(pipeline)
+    return list(result)
+
+# Função para contar quantas vezes cada livro foi emprestado usando agregação
+def get_most_borrowed_books():
+    pipeline = [
+        {
+            "$unwind": "$transactions"
+        },
+        {
+            "$match": {
+                "transactions.transaction_type": "borrow"
+            }
+        },
+        {
+            "$group": {
+                "_id": "$_id",
+                "book_name": {"$first": "$book_name"},
+                "borrow_count": {"$sum": 1}
+            }
+        },
+        {
+            "$sort": {"borrow_count": -1}
+        }
+    ]
+    result = books_collection.aggregate(pipeline)
+    return list(result)
+
+# Função para retornar o histórico de transações para um livro específico.
+def get_book_transaction_history(book_id):
+    pipeline = [
+        {
+            "$match": {"_id": book_id}
+        },
+        {
+            "$unwind": "$transactions"
+        },
+        {
+            "$project": {
+                "book_name": "$book_name",
+                "transaction_type": "$transactions.transaction_type",
+                "transaction_date": "$transactions.transaction_date",
+                "user_id": "$transactions.user_id"
+            }
+        }
+    ]
+    result = books_collection.aggregate(pipeline)
+    return list(result)
+
+# Exemplos de uso
+if __name__ == "__main__":
+    print(get_transaction_count_per_user())
+    print(get_most_borrowed_books())
+    book_id_example = ObjectId("66f37341f0b1344ec2bba9d1")  # Use um ID de livro válido
+    print(get_book_transaction_history(book_id_example))
