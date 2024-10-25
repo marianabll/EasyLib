@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Este documento contém exemplos de consultas MongoDB para as duas coleções (`Books` e `Users`) do projeto de gerenciamento de biblioteca. As consultas permitem verificar a disponibilidade de livros, listar livros por gênero ou autor, verificar a permissão de retirada para um determinado usuário e registrar novas retiradas/devoluções de livros. No arquivo `library_manager.py` da pasta `app` elas foram definidas dentro de funções.
+Este documento contém exemplos de consultas MongoDB para as duas coleções (`Books` e `Users`) do projeto de gerenciamento de biblioteca. As consultas permitem verificar a disponibilidade de livros, listar livros por gênero ou autor, verificar a permissão de retirada para um determinado usuário e registrar novas retiradas/devoluções de livros. No arquivo `app/library_manager.py`, elas foram devidamente definidas dentro de funções.
 
 ## 1. Coleção `Books`
 
