@@ -1,7 +1,5 @@
 # APIs para EasyLib
 
-## Introdução
-
 Este documento contém as APIs que foram criadas e testadas para _algumas_ das consultas MongoDB. Elas permitem realizar as quatro operações básicas (CRUD) das aplicações que manipulam dados:
 
 
