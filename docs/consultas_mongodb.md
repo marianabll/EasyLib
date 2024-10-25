@@ -45,22 +45,19 @@ A coleção `Books` contém documentos com a seguinte estrutura:
 
 #### Listar Livros Disponíveis por Gênero usando Agregação
 ```
-db.Books.aggregate([
-  {
-    $match: {
-      available: true,
-      book_genre: "Gênero Específico"      # A ser substituido pelo gênero desejado
-    }
-  },
-  {
-    $project: {{
-            "_id": {"$toString": "$_id"},  # Converte o _id para string
+pipeline = [
+        {"$match": {"book_genre": genre}},
+        {"$project": {
+            "_id": {"$toString": "$_id"},
             "book_name": 1,
-            "author.name": 1,
-    }}
-  }
-])
+            "author": 1,
+            "book_genre": 1,
+            "transactions": 1  # Inclui as transações para verificação
+        }}
+    ]
+db.Books.aggregate(pipeline)
 ```
+* Nota: Como não é possível chamar uma função Python diretamente dentro do pipeline de agregação do MongoDB, teremos que trazer todos os livros do gênero especificado e filtrar a disponibilidade em Python.
 
 ## 2. Coleção `Users`
 
@@ -89,16 +86,13 @@ A coleção `Users` contém documentos com a seguinte estrutura:
 
 #### Contar o total de Transações por Usuário usando Agregação
 ```
-db.Users.aggregate([
-  {
-    "$unwind": "$transactions"
-  },
-  {
-    "$group": {
-      "_id": "$_id",
-      "username": {"$first": "$username"},
-      "transaction_count": {"$sum": 1}
-    }
-  }
-])
+pipeline = [
+        {"$unwind": "$transactions"},
+        {"$group": {
+            "_id": "$_id",
+            "username": {"$first": "$username"},
+            "transaction_count": {"$sum": 1}
+        }}
+    ]
+db.Users.aggregate(pipeline)
 ```
