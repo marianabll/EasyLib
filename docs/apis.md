@@ -8,7 +8,7 @@ Este documento contém as APIs que foram criadas e testadas para _algumas_ das c
 ## CRIAR
 
 ### create_user()
-Permite criar um novo usuário usando o modelo Pydantic (a criação de um novo livro seguiria o mesmo processo).
+Permite criar um novo usuário usando o modelo Pydantic (a criação de um novo livro segue a mesma lógica).
 
 ```
 @app.post("/users/")
@@ -21,31 +21,42 @@ async def create_user(user: UserModel):
 ```
 
 ## LER
-Permite obter um usuário pelo ID (a consulta por um livro seguiria o mesmo processo).
+Permite obter um livro pelo ID ou um usuário por seu _username_.
+
+### get_book()
+
+```
+@app.get("/books/{book_id}")
+async def read_book(book_id: str):
+    book = library_manager.get_book(book_id)
+    if book:
+        return book
+    raise HTTPException(status_code=404, detail="Book not found")
+```
 
 ### get_user()
 
 ```
-@app.get("/users/{user_id}")
-def read_user(user_id: str):
-    user = library_manager.get_user(user_id)
+@app.get("/users/{username}")
+def read_user(username):
+    user = library_manager.get_user(username)
     if user:
         return user
     raise HTTPException(status_code=404, detail="User not found")
 ```
 
 ## ATUALIZAR
-Embora nenhuma API tenha sido criada para atualizar pontualmente um dado de algum documento (o nome de um livro ou a data de nascimento de um usuário, por exemplo), duas operações provocarão atualizações simultâneas nas duas coleções (Users e Books): a de **empréstimo** e a de **devolução** de um livro.
+Embora nenhuma API tenha sido criada para atualizar pontualmente um documento (o nome de um livro ou a data de nascimento de um usuário, por exemplo), duas operações provocarão atualizações simultâneas nas duas coleções (Users e Books): a de **empréstimo** e a de **devolução** de um livro.
 
 ### borrow_book()
-Permite registrar uma nova transação de empréstimo de livro, atualiza sua disponibilidade, aumenta o número de livros emprestados com o usuário que o pegou.
+Permite registrar uma nova transação de empréstimo de livro, atualizar sua disponibilidade e aumentar o número de livros emprestados com o usuário que o pegou.
 
 ```
 ATUALIZAR
 ```
 
 ### return_book()
-Permite registrar uma nova transação de devolução de livro, atualiza sua disponibilidade, diminui o número de livros emprestados com o usuário que o pegou.
+Permite registrar uma nova transação de devolução de livro, atualizar sua disponibilidade e diminuir o número de livros emprestados com o usuário que o pegou.
 
 ```
 ATUALIZAR
@@ -54,10 +65,16 @@ ATUALIZAR
 ## APAGAR
 
 ### delete_user()
-Permite excluir do banco de dados um usuário identificado a partir do seu ID.
+Permite excluir do banco de dados um usuário identificado a partir do seu username.
 
 ```
-ATUALIZAR
+@app.delete("/users/{username}")
+async def delete_user(username: str):
+    response = library_manager.delete_user(username)
+    if response["message"] == "User deleted successfully":
+        return response
+    else:
+        raise HTTPException(status_code=404, detail=response["message"])
 ```
 
 ## EXTRA: CONSULTA ENVOLVENDO AGREGAÇÃO
