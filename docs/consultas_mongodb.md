@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Este documento contém exemplos de consultas MongoDB para as duas coleções (`Books` e `Users`) do projeto de gerenciamento de biblioteca. As consultas permitem verificar a disponibilidade de livros, listar livros por gênero ou autor, verificar a permissão de retirada para um determinado usuário e registrar novas retiradas/devoluções de livros.
+Este documento contém exemplos de consultas MongoDB para as duas coleções (`Books` e `Users`) do projeto de gerenciamento de biblioteca. As consultas permitem verificar a disponibilidade de livros, listar livros por gênero ou autor, verificar a permissão de retirada para um determinado usuário e registrar novas retiradas/devoluções de livros. No arquivo `library_manager.py` da pasta `app` elas foram definidas dentro de funções.
 
 ## 1. Coleção `Books`
 
@@ -50,15 +50,15 @@ db.Books.aggregate([
   {
     $match: {
       available: true,            // Filtra apenas livros disponíveis
-      book_genre: "Gênero Específico" // Substitua por um gênero desejado
+      book_genre: "Gênero Específico" // Substituir pelo gênero desejado
     }
   },
   {
-    $project: {
-      title: 1,     // Inclui o título do livro
-      author: 1,    // Inclui o autor do livro
-      status: 1     // Inclui o status do livro
-    }
+    $project: {{
+            "_id": {"$toString": "$_id"},  # Converte o _id para string
+            "book_name": 1,
+            "author.name": 1,
+    }}
   }
 ])
 ```
