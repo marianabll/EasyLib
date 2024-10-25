@@ -19,7 +19,7 @@ async def create_user(user: UserModel):
 ```
 
 ## LER
-Permite obter um livro pelo ID ou um usuário por seu _username_.
+Permitem obter um livro pelo ID, um usuário por seu _username_ ou o histórico de transações de um livro.
 
 ### get_book()
 
@@ -41,6 +41,15 @@ def read_user(username):
     if user:
         return user
     raise HTTPException(status_code=404, detail="User not found")
+```
+
+### get_book_transaction_history()
+
+```
+@app.get("/books/{book_id}/transactions")
+async def get_book_transaction_history(book_id: str):
+    transactions = library_manager.get_book_transaction_history(book_id)
+    return transactions
 ```
 
 ## ATUALIZAR
