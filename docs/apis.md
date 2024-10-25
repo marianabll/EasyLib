@@ -94,12 +94,28 @@ async def delete_user(username: str):
         raise HTTPException(status_code=404, detail=response["message"])
 ```
 
-## EXTRA: CONSULTA ENVOLVENDO AGREGAÇÃO
-Como requisito especial do projeto, uma consulta envolvendo agregação retornará a lista de livros disponíveis de um determinado gênero.
+## EXTRA: CONSULTAS ENVOLVENDO AGREGAÇÃO
+Como requisito especial do projeto, duas consultas foram criadas envolvendo agregação.
+
+### get_available_books_by_genre()
+Retornará a lista de livros disponíveis de um determinado gênero.
 
 ```
 @app.get("/books/available/")
 async def get_available_books_by_genre(genre: str):
     books = library_manager.get_available_books_by_genre(genre)
     return books
+```
+
+### get_transaction_count_per_user()
+Retornará a quantidade de transações por usuário.
+
+```
+@app.get("/users/transaction_count/")
+async def get_transaction_count():
+    try:
+        transaction_counts = library_manager.get_transaction_count_per_user()
+        return {"transaction_counts": transaction_counts}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 ```
