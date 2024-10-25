@@ -3,7 +3,7 @@
 ## Introdução
 
 Este documento contém as APIs que foram criadas e testadas para _algumas_ das consultas MongoDB. Elas permitem realizar as quatro operações básicas (CRUD) das aplicações que manipulam dados:
-- CRIAR:a disponibilidade de livros, listar livros por gênero ou autor, verificar a permissão de retirada para um determinado usuário e registrar novas retiradas/devoluções de livros. No arquivo `app/library_manager.py`, elas foram devidamente definidas dentro de funções.
+
 
 ## CRIAR
 
@@ -20,64 +20,52 @@ async def create_user(user: UserModel):
         raise HTTPException(status_code=500, detail=str(e))
 ```
 
-#### Verificar Disponibilidade de um Livro
+## LER
+Permite obter um usuário pelo ID (a consulta por um livro seguiria o mesmo processo).
 
-```db.Books.findOne({ book_name: "1984" }, { available: 1 })```
+### get_user()
 
-#### Consultar Livros por Autor
-
-```db.Books.find({ "author.name": "George Orwell" })```
-
-#### Listar Livros Disponíveis por Gênero
-
-```db.Books.find({ book_genre: "Dystopian", available: true })```
-
-#### Retornar Livros Disponíveis de um Determinado Gênero usando Agregação
 ```
-db.Books.aggregate([
-  {
-    $match: {
-      available: true,            // Filtra apenas livros disponíveis
-      book_genre: "Gênero Específico" // Substituir pelo gênero desejado
-    }
-  },
-  {
-    $project: {{
-            "_id": {"$toString": "$_id"},  # Converte o _id para string
-            "book_name": 1,
-            "author.name": 1,
-    }}
-  }
-])
+@app.get("/users/{user_id}")
+def read_user(user_id: str):
+    user = library_manager.get_user(user_id)
+    if user:
+        return user
+    raise HTTPException(status_code=404, detail="User not found")
 ```
 
-## 2. Coleção `Users`
+## ATUALIZAR
+Embora nenhuma API tenha sido criada para atualizar pontualmente um dado de algum documento (o nome de um livro ou a data de nascimento de um usuário, por exemplo), duas operações provocarão atualizações simultâneas nas duas coleções (Users e Books): a de **empréstimo** e a de **devolução** de um livro.
 
-A coleção `Users` contém documentos com a seguinte estrutura:
+### borrow_book()
+Permite registrar uma nova transação de empréstimo de livro, atualiza sua disponibilidade, aumenta o número de livros emprestados com o usuário que o pegou.
 
-```json
-{
-  "_id": { "$oid": "66f5bff7b7394dd698d8e1a7" },
-  "username": "joaosilva",
-  "email": "joaosilva@example.com",
-  "full_name": "João Silva",
-  "password_hash": "hashed_password_1",
-  "date_of_birth": "1990-05-15",
-  "join_date": "2023-01-10",
-  "is_active": true,
-  "favorite_genres": ["Fiction", "Adventure"],
-  "number_of_books_issued": { "$numberInt": "1" },
-  "borrowed_books": ["66f5b5b2b7394dd698d8e1a6"]
-}
+```
+ATUALIZAR
 ```
 
-### Exemplos de consultas para a coleção `Users`
+### return_book()
+Permite registrar uma nova transação de devolução de livro, atualiza sua disponibilidade, diminui o número de livros emprestados com o usuário que o pegou.
 
-#### Verificar se um Usuário está Registrado na Biblioteca
+```
+ATUALIZAR
+```
 
-```db.Users.findOne({ username: "joaosilva" })```
+## APAGAR
 
-#### Consultar o Número de Livros que um Usuário Mantém em Mãos
+### delete_user()
+Permite excluir do banco de dados um usuário identificado a partir do seu ID.
 
-```db.Users.findOne({ _id: ObjectId("66f37341f0b1344ec2bba9df") }, { number_of_books_issued: 1 })```
+```
+ATUALIZAR
+```
 
+## EXTRA: CONSULTA ENVOLVENDO AGREGAÇÃO
+Como requisito especial do projeto, uma consulta envolvendo agregação retornará a lista de livros disponíveis de um determinado gênero.
+
+```
+@app.get("/books/available/")
+async def get_available_books_by_genre(genre: str):
+    books = library_manager.get_available_books_by_genre(genre)
+    return books
+```
