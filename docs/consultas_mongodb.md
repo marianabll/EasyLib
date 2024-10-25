@@ -49,8 +49,8 @@ A coleção `Books` contém documentos com a seguinte estrutura:
 db.Books.aggregate([
   {
     $match: {
-      available: true,                # Filtra apenas livros disponíveis
-      book_genre: "Gênero Específico" # A ser substituido pelo gênero desejado
+      available: true,                     # Filtra apenas livros disponíveis
+      book_genre: "Gênero Específico"      # A ser substituido pelo gênero desejado
     }
   },
   {
