@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Este documento contém exemplos de consultas MongoDB para as duas coleções (`Books` e `Users`) do projeto de gerenciamento de biblioteca. As consultas permitem verificar a disponibilidade de livros, listar livros por gênero ou autor, verificar a permissão de retirada para um determinado usuário e registrar novas retiradas/devoluções de livros. No arquivo `app/library_manager.py`, elas foram devidamente definidas dentro de funções.
+Este documento contém _alguns_ exemplos de documentos e de consultas MongoDB para as duas coleções (`Books` e `Users`) do projeto de gerenciamento de biblioteca. As consultas permitirão verificar a disponibilidade de livros, listar livros por gênero ou autor, registrar novas retiradas/devoluções de livros etc. No arquivo `app/library_manager.py`, elas foram devidamente definidas dentro de funções.
 
 ## 1. Coleção `Books`
 
@@ -25,8 +25,7 @@ A coleção `Books` contém documentos com a seguinte estrutura:
   "summary": "Uma crítica ao totalitarismo através da história de Winston Smith.",
   "average_rating": { "$numberDouble": "4.8" },
   "tags": ["dystopia", "politics", "surveillance"],
-  "available": false,
-  "borrowed_by": "66f5bff7b7394dd698d8e1a7"
+  "transactions": []
 }
 ```
 
@@ -40,11 +39,11 @@ A coleção `Books` contém documentos com a seguinte estrutura:
 
 ```db.Books.find({ "author.name": "George Orwell" })```
 
-#### Listar Livros Disponíveis por Gênero
+#### Listar Livros Disponíveis por Gênero sem Agregação
 
 ```db.Books.find({ book_genre: "Dystopian", available: true })```
 
-#### Retornar Livros Disponíveis de um Determinado Gênero usando Agregação
+#### Listar Livros Disponíveis por Gênero usando Agregação
 ```
 db.Books.aggregate([
   {
@@ -78,18 +77,14 @@ A coleção `Users` contém documentos com a seguinte estrutura:
   "join_date": "2023-01-10",
   "is_active": true,
   "favorite_genres": ["Fiction", "Adventure"],
-  "number_of_books_issued": { "$numberInt": "1" },
-  "borrowed_books": ["66f5b5b2b7394dd698d8e1a6"]
+  "transactions": []
 }
 ```
 
-### Exemplos de consultas para a coleção `Users`
+### Exemplo de consultas para a coleção `Users`
 
 #### Verificar se um Usuário está Registrado na Biblioteca
 
 ```db.Users.findOne({ username: "joaosilva" })```
 
-#### Consultar o Número de Livros que um Usuário Mantém em Mãos
-
-```db.Users.findOne({ _id: ObjectId("66f37341f0b1344ec2bba9df") }, { number_of_books_issued: 1 })```
 
