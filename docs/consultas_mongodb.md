@@ -87,4 +87,18 @@ A coleção `Users` contém documentos com a seguinte estrutura:
 
 ```db.Users.findOne({ username: "joaosilva" })```
 
+#### Contar o total de Transações por Usuário usando Agregação
+```
+db.Users.aggregate([
+  {
+    "$unwind": "$transactions"
+  },
+  {
+    "$group": {
+      "_id": "$_id",
+      "username": {"$first": "$username"},
+      "transaction_count": {"$sum": 1}
+    }
+  }
+])
 
