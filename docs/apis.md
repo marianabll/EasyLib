@@ -59,14 +59,24 @@ Embora nenhuma API tenha sido criada para atualizar pontualmente um documento (o
 Permite registrar uma nova transação de empréstimo de livro, atualizar sua disponibilidade e aumentar o número de livros emprestados com o usuário que o pegou.
 
 ```
-ATUALIZAR
+@app.post("/books/borrow/")
+async def borrow_book(user_id: str, book_id: str):
+    result = library_manager.borrow_book(user_id, book_id)
+    if result == "Book not available":
+        raise HTTPException(status_code=400, detail="Book not available")
+    return {"message": "Book borrowed successfully"}
 ```
 
 ### return_book()
 Permite registrar uma nova transação de devolução de livro, atualizar sua disponibilidade e diminuir o número de livros emprestados com o usuário que o pegou.
 
 ```
-ATUALIZAR
+@app.post("/books/return/")
+async def return_book(user_id: str, book_id: str):
+    result = library_manager.return_book(user_id, book_id)
+    if result == "Book not borrowed by this user":
+        raise HTTPException(status_code=400, detail="Book not borrowed by this user")
+    return {"message": "Book returned successfully"}
 ```
 
 ## APAGAR
