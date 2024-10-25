@@ -81,7 +81,7 @@ A coleção `Users` contém documentos com a seguinte estrutura:
 }
 ```
 
-### Exemplo de consultas para a coleção `Users`
+### Exemplo de consulta para a coleção `Users`
 
 #### Verificar se um Usuário está Registrado na Biblioteca
 
