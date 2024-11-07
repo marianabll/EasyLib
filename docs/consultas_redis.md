@@ -9,6 +9,3 @@ Aqui, o Redis atuará como cache para armazenar consultas recentes de livros por
 
 #### 2. Contador de empréstimos por usuário
 Essa funcionalidade registra o número de empréstimos feitos por cada usuário, útil para gerar estatísticas de uso e para otimizar contagens de empréstimos.
-
-#### 3. Armazenamento de sessões de usuários ativos [não realizado]
-Esse recurso salva o status dos usuários logados, permitindo a verificação rápida de quem está ativo, com dados que expiram automaticamente após um certo tempo de inatividade.
